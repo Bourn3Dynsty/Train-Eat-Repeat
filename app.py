@@ -5,7 +5,7 @@ import os
 app = Flask(__name__)
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
-@app.route('/generate_plan', methods=['POST'])
+@application.route('/generate_plan', methods=['POST'])
 def generate_plan():
     fitness_data = request.json
     prompt = format_prompt(fitness_data)
