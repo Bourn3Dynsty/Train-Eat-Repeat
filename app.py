@@ -172,8 +172,8 @@ def parse_meal_response(response):
 
 def send_email(workout_plan, meal_plan):
     # Set up the email
-    sender_email = "mdibiaso51@gmail.com"
-    receiver_email = "mdibiaso51@gmail.com"
+    sender_email = "youremail.com"
+    receiver_email = "youremail.com"
     subject = "Personalized Workout and Meal Plans"
     message = f"""
     Hello,
