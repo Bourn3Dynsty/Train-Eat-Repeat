@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Personalized Workout and Meal Plan Generator</title>
+    <script src="static\main.js" defer></script>
+</head>
+<body>
+    <h1>Personalized Workout and Meal Plan Generator</h1>
+    <form id="plan-form">
+        <label for="height">Height (in cm):</label><br>
+        <input type="number" id="height" name="height" required><br>
+        <label for="weight">Weight (in kg):</label><br>
+        <input type="number" id="weight" name="weight" required><br>
+        <label for="age">Age:</label><br>
+        <input type="number" id="age" name="age" required><br>
+        <label for="sex">Sex:</label><br>
+        <select id="sex" name="sex" required>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+        </select><br>
+        <label for="bmi">BMI:</label><br>
+        <input type="number" id="bmi" name="bmi" required><br>
+        <label for="fitness_level">Fitness Level:</label><br>
+        <select id="fitness_level" name="fitness_level" required>
+            <option value="beginner">Beginner</option>
+            <option value="intermediate">Intermediate</option>
+            <option value="advanced">Advanced</option>
+        </select><br>
+        <label for="workout_type">Workout Type:</label><br>
+        <select id="workout_type" name="workout_type" required>
+            <option value="general">General</option>
+            <option value="powerlifting">Powerlifting</option>
+            <option value="bodybuilding">Bodybuilding</option>
+            <!-- Add more workout types as required -->
+        </select><br>
+        <input type="submit" value="Generate Plan">
+    </form>
+    <div id="message"></div>
+</body>
+</html>
