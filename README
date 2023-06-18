@@ -1,63 +1,101 @@
+# 💪🍎 Train Eat Repeat - Personalized Fitness & Nutrition Planner App 🏋️‍♀️🥗
 
+Train Eat Repeat is an application that integrates the power of OpenAI's GPT-3 model, a Flask backend server, and a fun 🎉 frontend form to generate personalized workout and meal plans.
 
-💪🍎 Train Eat Repeat - Personalized Fitness & Nutrition Planner App 🏋️‍♀️🥗
-Hello and welcome to your new favorite tool for fitness and nutrition planning! Train Eat Repeat is a Flask application that leverages the power of OpenAI's GPT-3 model to generate personalized workout and meal plans based on user data.
+## 🎯 What it Does
 
-Here's how it works:
+Train Eat Repeat asks users to input their health and fitness details via a form 📝, including height, weight, age, sex, BMI, fitness level, workout type, and goal. Upon submission, the form data is sent to our Flask backend as a POST request.
 
-1️⃣ The user sends a POST request to the /generate_plan endpoint with their details.
-2️⃣ The app formats a prompt for both a workout and meal plan based on the user's information.
-3️⃣ The prompts are sent to OpenAI, and the responses are parsed and formatted into plans.
-4️⃣ The generated plans are then sent to the user via email.
+This data then informs a set of prompts sent to OpenAI's GPT-3 model, which returns AI-generated workout and meal plans 🍛🏋️ tailored to the user's input. The plans are formatted and returned to the user, displayed on the web page, and also sent via email 📧.
 
-Pretty cool, huh? 🕺💃
+## 🔧 Getting Started
 
-🔧 Getting Started
-To get started with Train Eat Repeat, follow these steps:
+**Step 1: Clone the Repo** 📂
 
-Clone the repository to your local machine:
+Use the following commands in your terminal to clone the repository and navigate into the project directory:
 
-bash
-Copy code
+```bash
 git clone <repo_url>
 cd <repo_directory>
-Set the following environment variables:
 
-OPENAI_API_KEY: Your OpenAI API key for accessing the GPT-3 API.
-PORT: The port on which your Flask app will run (defaults to 5000 if not provided).
-Configure your AWS credentials for sending emails via Amazon SES.
+Step 2: Set Up Your Environment 🌍
 
-Install the required Python packages:
+You'll need to set up several environment variables:
+
+    OPENAI_API_KEY: This is your personal OpenAI API key 🔑, which allows access to the GPT-3 API.
+    PORT: This is the port where your Flask app will run. If not provided, it defaults to 5000.
+
+Remember to also configure your AWS credentials if you want to use Amazon SES for email functionality.
+
+Step 3: Install Required Packages 📦
+
+Install the necessary Python packages using the provided requirements.txt file:
 
 bash
-Copy code
+
 pip install -r requirements.txt
-Start the app:
+
+Step 4: Run the App 🚀
+
+Start the Flask application with:
 
 bash
-Copy code
-python main.py
-Your Flask app will now be running, and you can start sending POST requests to localhost:<your_port>/generate_plan to generate personalized workout and meal plans!
 
-📫 Sending Requests
-To generate personalized plans, send a POST request with the following JSON body:
+python main.py
+
+The app will now be running on localhost:<your_port>. You can navigate to this address in your web browser to view the form and submit data.
+📫 Interacting with the App
+
+There are two primary ways to interact with the application: through the frontend form and through direct API requests.
+
+Frontend Form 🖥
+
+The form asks users to input their height (in feet and inches), weight (in kg), age, sex, BMI, fitness level, desired type of workout, and fitness goal. On submission, the form prevents the default page refresh and sends a POST request to the /generate_plan endpoint with the form data.
+
+API Requests 📡
+
+Alternatively, you can send a POST request directly to the /generate_plan endpoint with the following JSON body:
 
 json
-Copy code
+
 {
-  "height": 170,
+  "height": "5' 7\"",
   "weight": 70,
   "age": 30,
   "sex": "female",
   "bmi": 24.2,
-  "fitness_level": "intermediate"
+  "fitness_level": "intermediate",
+  "workout_type": "<workout_type>",
+  "goal": "<goal>"
 }
-If everything goes well, you will receive a response indicating that the plans have been sent via email!
 
-📚 Learn More
-Want to customize your app? You can edit the prompts sent to OpenAI in the format_workout_prompt() and format_meal_prompt() functions. Additionally, you can adjust the parsing and formatting of the responses in the parse_workout_response() and parse_meal_response() functions.
+🛠 Customizing the App
 
-🤔 Need Help?
-Found a bug or have a suggestion? Open an issue or, even better, submit a pull request! We love community contributions. 💖
+You can customize the prompts sent to OpenAI by modifying the format_workout_prompt() and format_meal_prompt() functions in main.py. Additionally, the parsing and formatting of the responses can be adjusted in the parse_workout_response() and parse_meal_response() functions.
 
-Stay fit and stay healthy! 🌟
+
+## 🚀 Future Development
+
+Our team is constantly looking to improve and expand upon the capabilities of Train Eat Repeat, and we have some exciting developments in the pipeline!
+
+**1. Integration of Juggernaut Powerlifting Method** 🏋️‍♂️
+
+We plan on adding the Juggernaut Powerlifting Method, a highly recommended regimen developed by Chad Wesley Smith and Juggernaut Training Systems. This comprehensive 16-week cycle emphasizes submaximal work to increase the lifter's work capacity without excessively taxing the Central Nervous System (CNS). It's perfect for intermediate-level lifters looking to up their strength game. 
+
+**2. Exercise Videos from YouTube's API** 🎥
+
+To make your workouts as effective and safe as possible, we aim to integrate YouTube's API to provide video demonstrations for each recommended exercise. This way, you can ensure your form is correct and minimize the risk of injury.
+
+**3. Containerizing the App with Docker** 📦
+
+For easier deployment and scaling, we plan on containerizing the app with Docker. This will enable us to ensure consistent performance regardless of the environment in which the app is run.
+
+Please stay tuned for these exciting updates, and don't hesitate to reach out if you have additional ideas or feedback! 💡💬
+
+
+
+
+
+🙋‍♀️ Need Help?
+
+Encountered a problem or have a suggestion

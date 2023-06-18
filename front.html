@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Personalized Workout and Meal Plan Generator</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
-    <script src="static\main.js" defer></script>
+    <script src="static/main.js" defer></script>
 </head>
 <body class="bg-gray-200 py-10 px-5">
     <div class="w-full max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden md:max-w-2xl">
@@ -15,16 +15,22 @@
         </div>
         <form id="plan-form" class="m-7 space-y-6">
             <div>
-                <label class="text-sm font-bold text-gray-600 block">Height (in cm)</label>
-                <input class="w-full p-2 border border-gray-300 rounded mt-1" type="number" id="height" name="height" required>
+                <label class="text-sm font-bold text-gray-600 block">Height (feet and inches)</label>
+                <div class="flex">
+                    <input class="w-1/2 p-2 border border-gray-300 rounded-tl mt-1" type="number" id="height-feet" name="height-feet" placeholder="Feet" required>
+                    <input class="w-1/2 p-2 border border-gray-300 rounded-tr mt-1" type="number" id="height-inches" name="height-inches" placeholder="Inches" required>
+                </div>
+                <p class="text-xs text-gray-500">e.g., 5 feet 7 inches</p>
             </div>
             <div>
-                <label class="text-sm font-bold text-gray-600 block">Weight (in kg)</label>
+                <label class="text-sm font-bold text-gray-600 block">Weight (in pounds)</label>
                 <input class="w-full p-2 border border-gray-300 rounded mt-1" type="number" id="weight" name="weight" required>
+                <p class="text-xs text-gray-500">e.g., 156 pounds</p>
             </div>
             <div>
                 <label class="text-sm font-bold text-gray-600 block">Age</label>
                 <input class="w-full p-2 border border-gray-300 rounded mt-1" type="number" id="age" name="age" required>
+                <p class="text-xs text-gray-500">e.g., 31 years</p>
             </div>
             <div>
                 <label class="text-sm font-bold text-gray-600 block">Sex</label>
@@ -32,10 +38,12 @@
                     <option value="male">Male</option>
                     <option value="female">Female</option>
                 </select>
+                <p class="text-xs text-gray-500">Select your gender</p>
             </div>
             <div>
                 <label class="text-sm font-bold text-gray-600 block">BMI</label>
                 <input class="w-full p-2 border border-gray-300 rounded mt-1" type="number" id="bmi" name="bmi" required>
+                <p class="text-xs text-gray-500">Enter your BMI (Body Mass Index)</p>
             </div>
             <div>
                 <label class="text-sm font-bold text-gray-600 block">Fitness Level</label>
@@ -44,22 +52,42 @@
                     <option value="intermediate">Intermediate</option>
                     <option value="advanced">Advanced</option>
                 </select>
+                <p class="text-xs text-gray-500">Choose your fitness level based on your experience and training intensity.</p>
+                <p class="text-xs text-gray-500">Beginner: Just starting out or have limited exercise experience</p>
+                <p class="text-xs text-gray-500">Intermediate: Regularly active and have some exercise experience</p>
+                <p class="text-xs text-gray-500">Advanced: Experienced and highly active with intense training</p>
             </div>
             <div>
                 <label class="text-sm font-bold text-gray-600 block">Workout Type</label>
                 <select class="w-full p-2 border border-gray-300 rounded mt-1" id="workout_type" name="workout_type" required>
-                    <option value="general">General</option>
-                    <option value="powerlifting">Powerlifting</option>
-                    <option value="bodybuilding">Bodybuilding</option>
+                    <option value="general">General Fitness</option>
+                    <option value="fat_loss">Fat Loss (Cardio-focused)</option>
+                    <option value="bodybuilding">Bodybuilding (Push-Pull-Legs)</option>
                     <!-- Add more workout types as required -->
-                </select><br>
-                
-                <div class="flex items-center justify-center mt-4">
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
-                        Generate Plans
-                    </button>
-                </div>
-            </form>
-        </div>
+                </select>
+                <p class="text-xs text-gray-500">Select the type of workout you prefer:</p>
+                <p class="text-xs text-gray-500">- General Fitness: A well-rounded workout plan.</p>
+                <p class="text-xs text-gray-500">- Fat Loss (Cardio-focused): A workout plan with an emphasis on cardio exercises.</p>
+                <p class="text-xs text-gray-500">- Bodybuilding (Push-Pull-Legs): A workout plan for muscle building with a push-pull-legs split.</p>
+            </div>
+            
+            <div>
+                <label class="text-sm font-bold text-gray-600 block">Goal</label>
+                <select class="w-full p-2 border border-gray-300 rounded mt-1" id="goal" name="goal" required>
+                    <option value="" disabled selected>Select a goal</option>
+                    <option value="fat_loss">Fat Loss (e.g., reduce body fat percentage)</option>
+                    <option value="muscle_gain">Muscle Gain (e.g., increase muscle mass)</option>
+                    <option value="strength_training">Strength Training (e.g., improve strength and power)</option>
+                    <!-- Add more goals as required -->
+                </select>
+                <p class="text-xs text-gray-500">Select your desired goal</p>
+            </div>
+            <div class="flex items-center justify-center mt-4">
+                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                    Generate Plans
+                </button>
+            </div>
+        </form>
+    </div>
 </body>
 </html>

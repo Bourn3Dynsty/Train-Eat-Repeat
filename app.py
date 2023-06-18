@@ -4,6 +4,7 @@ import os
 import boto3
 from flask_cors import CORS
 from threading import Thread
+import random
 
 application = Flask(__name__)
 CORS(application)  # Enable CORS on your Flask app
@@ -18,19 +19,27 @@ openai.api_key = os.getenv('OPENAI_API_KEY')
 def generate_plan():
     fitness_data = request.json
 
+    print(fitness_data)  # Print the received data
+
     if fitness_data is None:
         return jsonify({'message': 'No data provided'}), 400  # Bad Request
-    required_keys = ["height", "weight", "age", "sex", "bmi", "fitness_level"]
+
+    required_keys = ["height", "weight", "age", "sex", "bmi", "fitness_level", "goal"]
+    print(list(fitness_data.keys()))  # Print the keys in the received data
     for key in required_keys:
         if key not in fitness_data:
-            return jsonify({'message': f'Missing key in data: {key}'}), 400  # Bad Request
-        
-     # Start a new Thread to handle the request and immediately return a response to the user
+            return jsonify({'message': f'Missing key in data: {key}'}), 400
 
 
-    
-    fitness_data = request.json
-    workout_prompt = format_workout_prompt(fitness_data)
+
+    goal = fitness_data["goal"]
+    if goal == "fat_loss":
+        workout_prompt = format_fat_loss_workout_prompt(fitness_data)  # Update this line
+    elif goal == "bodybuilding":
+        workout_prompt = format_bodybuilding_workout_prompt(fitness_data)
+    else:
+        workout_prompt = format_workout_prompt(fitness_data)  # Update this line for the general workout plan
+
     meal_prompt = format_meal_prompt(fitness_data)
 
     workout_response = openai.Completion.create(
@@ -51,7 +60,9 @@ def generate_plan():
 
     send_email(workout_plan, meal_plan)
 
-    return jsonify({'message': 'Plans sent via email'})
+    return jsonify({'message': 'Cooking something good!. The plans will be sent via email'})
+
+
 
 def format_workout_prompt(fitness_data):
     # Determine the number of workout days based on fitness level
@@ -70,6 +81,9 @@ def format_workout_prompt(fitness_data):
         workout_days = 3  # Default to 3 workout days for unknown fitness levels
         exercise_rep_ranges = "3 sets of 8-10 reps"  # Default rep range
 
+    # Retrieve the height value from the form field
+    height = fitness_data["height"]
+
     # Create a prompt for generating the workout plan
     prompt = (
         "As a NASM-certified personal trainer with 20 years of experience, I am helping a user create a workout plan. "
@@ -81,9 +95,9 @@ def format_workout_prompt(fitness_data):
         "BMI: {}\n"
         "Fitness Level: {}\n"
         "Workout Type: {}\n"
-        "Based on this information, create a personalized {}-day workout plan with 5 exercises per day:\n\n"
+        "Based on this information, create a personalized {}-day workout plan with 5-8 exercises per day depending on fitness level:\n\n"
     ).format(
-        fitness_data["height"],
+        height,
         fitness_data["weight"],
         fitness_data["age"],
         fitness_data["sex"],
@@ -103,10 +117,31 @@ def format_workout_prompt(fitness_data):
     return prompt
 
 
-def format_meal_prompt(fitness_data):
-    # Create a prompt for generating the meal plan
+
+
+def format_fat_loss_workout_prompt(fitness_data):
+    # Determine the number of workout days based on fitness level
+    fitness_level = fitness_data["fitness_level"]
+    workout_type = fitness_data.get("workout_type", "general")  # Fetch workout type if present, otherwise default to "general"
+    if fitness_level == "beginner":
+        workout_days = 3
+        exercise_rep_ranges = "3 sets of 8-10 reps"
+    elif fitness_level == "intermediate":
+        workout_days = 5
+        exercise_rep_ranges = "3 sets of 10-12 reps"
+    elif fitness_level == "advanced":
+        workout_days = 6
+        exercise_rep_ranges = "3 sets of 12-15 reps"
+    else:
+        workout_days = 3  # Default to 3 workout days for unknown fitness levels
+        exercise_rep_ranges = "3 sets of 8-10 reps"  # Default rep range
+
+    # Retrieve the height value from the form field
+    height = fitness_data["height"]
+
+    # Create a prompt for generating the workout plan
     prompt = (
-        "As a nutritionist with 20 years of experience, I am helping a user create a personalized 7-day meal plan. "
+        "As a NASM-certified personal trainer with 20 years of experience, I am helping a user create a workout plan for fat loss that has cardio and a little bit of light weights"
         "The user's details are as follows:\n"
         "Height: {}\n"
         "Weight: {}\n"
@@ -114,9 +149,105 @@ def format_meal_prompt(fitness_data):
         "Sex: {}\n"
         "BMI: {}\n"
         "Fitness Level: {}\n"
+        "Workout Type: {}\n"
+        "Based on this information and the goal of fat loss, create a personalized {}-day workout plan with 5-8 exercises per day cardio and light weight excercises depending on fitness level:\n\n"
+    ).format(
+        height,
+        fitness_data["weight"],
+        fitness_data["age"],
+        fitness_data["sex"],
+        fitness_data["bmi"],
+        fitness_data["fitness_level"],
+        workout_type,
+        workout_days,
+    )
+
+    # Add exercise prompts for each day
+    for day in range(1, workout_days + 1):
+        prompt += f"Day {day}:\n"
+        for exercise_num in range(1, 6):
+            prompt += f"Exercise {exercise_num}: [Cardio Exercise Name] - {exercise_rep_ranges}\n"
+        prompt += "\n"
+
+    return prompt
+
+
+
+def format_bodybuilding_workout_prompt(fitness_data):
+    # Determine the number of workout days based on fitness level
+    fitness_level = fitness_data["fitness_level"]
+    workout_type = fitness_data.get("workout_type", "general")  # Fetch workout type if present, otherwise default to "general"
+    if fitness_level == "beginner":
+        workout_days = 3
+        exercise_rep_ranges = "3 sets of 8-10 reps"
+    elif fitness_level == "intermediate":
+        workout_days = 5
+        exercise_rep_ranges = "3 sets of 10-12 reps"
+    elif fitness_level == "advanced":
+        workout_days = 6
+        exercise_rep_ranges = "3 sets of 12-15 reps"
+    else:
+        workout_days = 3  # Default to 3 workout days for unknown fitness levels
+        exercise_rep_ranges = "3 sets of 8-10 reps"  # Default rep range
+
+    # Create a prompt for generating the workout plan
+    prompt = (
+        "As a IFBB Pro BodyBuilder with 20 years of experience, I am helping a user create a bodybuilding workout plan. "
+        "The user's details are as follows:\n"
+        "Height: {}\n"
+        "Weight: {}\n"
+        "Age: {}\n"
+        "Sex: {}\n"
+        "BMI: {}\n"
+        "Fitness Level: {}\n"
+        "Workout Type: {}\n"
+        "Based on this information and the goal of bodybuilding, create a personalized {}-day push-pull-legs (PPL) workout plan with 5-9 exercises per day depending on fitness level that focuses on making push-pull-legs splits:\n\n"
+    ).format(
+        fitness_data["height"],
+        fitness_data["weight"],
+        fitness_data["age"],
+        fitness_data["sex"],
+        fitness_data["bmi"],
+        fitness_data["fitness_level"],
+        workout_type,
+        workout_days,
+    )
+
+    # Add exercise prompts for each day
+    for day in range(1, workout_days + 1):
+        prompt += f"Day {day}:\n"
+        prompt += "Push:\n"
+        for exercise_num in range(1, 6):
+            prompt += f"Exercise {exercise_num}: [Push Exercise Name] - {exercise_rep_ranges}\n"
+        prompt += "\n"
+
+        prompt += "Pull:\n"
+        for exercise_num in range(1, 6):
+            prompt += f"Exercise {exercise_num}: [Pull Exercise Name] - {exercise_rep_ranges}\n"
+        prompt += "\n"
+
+        prompt += "Legs:\n"
+        for exercise_num in range(1, 6):
+            prompt += f"Exercise {exercise_num}: [Legs Exercise Name] - {exercise_rep_ranges}\n"
+        prompt += "\n"
+
+    return prompt
+
+
+
+
+def format_meal_prompt(fitness_data):
+    # Create a prompt for generating the meal plan
+    prompt = (
+        "As a nutritionist with 20 years of experience, I am helping a user create a personalized 7-day meal plan. "
+        "The user's details are as follows:\n"
+        "Weight: {}\n"
+        "Age: {}\n"
+        "Sex: {}\n"
+        "BMI: {}\n"
+        "Fitness Level: {}\n"
         "Based on this information, create a personalized 7-day meal plan that includes breakfast, snack 1, lunch, snack 2, and dinner with ingredients, calorie count per ounce for each ingredient, serving sizes, and total calories for the meal:"
     ).format(
-        fitness_data["height"], 
         fitness_data["weight"], 
         fitness_data["age"], 
         fitness_data["sex"], 
@@ -172,10 +303,24 @@ def parse_meal_response(response):
 
 def send_email(workout_plan, meal_plan):
     # Set up the email
-    sender_email = "youremail.com"
-    receiver_email = "youremail.com"
+    sender_email = os.getenv("SENDER_EMAIL")
+    receiver_email = os.getenv("RECEIVER_EMAIL")
     subject = "Personalized Workout and Meal Plans"
-    message = f"""
+
+    # Generate a random motivational quote
+    motivational_quotes = [
+        "Believe in yourself, there's something inside you that is greater than any obstacle.",
+        "Success starts with self-discipline.",
+        "You are one workout away from a good mood.",
+        "Your body can stand almost anything. It’s your mind you have to convince.",
+        "Sweat is just fat crying.",
+        "The only bad workout is the one that didn't happen.",
+        "Challenges are what make life interesting. Overcoming them is what makes them meaningful.",
+    ]
+    random_quote = random.choice(motivational_quotes)
+
+    # Add content to the message
+    message_body = f"""
     Hello,
 
     Here are your personalized workout and meal plans:
@@ -186,32 +331,31 @@ def send_email(workout_plan, meal_plan):
     Meal Plan:
     {meal_plan}
 
-    Enjoy your fitness journey!
+    Remember, consistency is key. Stick to your plan and enjoy your fitness journey.
 
-    Regards,
-    Your Personal Trainer
+    Quote of the Day:
+    "{random_quote}" 💪
+
+    Let's make fitness a lifestyle!
+
+    Best,
+    [Your Name]
     """
-
-    # Create an SES client
-    ses_client = boto3.client('ses', region_name='us-east-1')
-
-    # Send the email
-    response = ses_client.send_email(
+    
+    message = {
+        'Subject': {'Data': subject},
+        'Body': {'Text': {'Data': message_body}}
+    }
+    
+    client = boto3.client('ses', region_name='us-east-1')  # Replace 'us-west-2' with your desired region
+    response = client.send_email(
         Source=sender_email,
-        Destination={
-            'ToAddresses': [receiver_email]
-        },
-        Message={
-            'Subject': {
-                'Data': subject
-            },
-            'Body': {
-                'Text': {
-                    'Data': message
-                }
-            }
-        }
+        Destination={'ToAddresses': [receiver_email]},
+        Message=message
     )
+
+    return response
+
 
 
 if __name__ == '__main__':
