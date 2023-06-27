@@ -6,12 +6,16 @@ from flask_cors import CORS
 from threading import Thread
 import random
 import PyPDF2
+import logging
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS on your Flask app
 
 openai.api_key = os.getenv('OPENAI_API_KEY')
 file_path = r"C:\Users\mdibiaso\Repos\Train-Eat-Repeat\6daysplit.pdf"
+
+# Set up the logger
+logging.basicConfig(level=logging.DEBUG)
 
 
 @app.route('/')
@@ -22,9 +26,11 @@ def index():
 def generate_plan():
     fitness_data = request.json
 
-    print(fitness_data)  # Print the received data
+    
+    
     keys = list(fitness_data.keys())
-    print(keys)
+    logging.debug(fitness_data)  # Use logging instead of print
+  
 
     if fitness_data is None:
         print(fitness_data)
