@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify,render_template
 import openai
 import os
 import boto3
@@ -14,7 +14,9 @@ openai.api_key = os.getenv('OPENAI_API_KEY')
 file_path = r"C:\Users\mdibiaso\Repos\Train-Eat-Repeat\6daysplit.pdf"
 
 
-
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 @app.route('/generate_plan', methods=['POST'])
 def generate_plan():
