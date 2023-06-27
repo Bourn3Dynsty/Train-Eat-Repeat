@@ -4,6 +4,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     form.addEventListener('submit', function(event) {
         event.preventDefault();
 
+        const email = document.getElementById('email').value;  // Get email
         const heightFeet = document.getElementById('height-feet').value;
         const heightInches = document.getElementById('height-inches').value;
         const weight = document.getElementById('weight').value;
@@ -13,10 +14,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
         const fitnessLevel = document.getElementById('fitness_level').value;
         const workoutType = document.getElementById('workout_type').value;  // Get workout type
         const goal = document.getElementById('goal').value;  // Get goal
-        
-        const height = `${heightFeet}' ${heightInches}"`;  // Combine feet and inches
-        
+
         const data = {
+            "email": email,  // Include email in data
             "height_feet": heightFeet,
             "height_inches": heightInches,
             "weight": weight,
@@ -28,7 +28,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             "goal": goal
         };
 
-        fetch('http://localhost:5000/generate_plan', {
+        fetch('/generate_plan', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
